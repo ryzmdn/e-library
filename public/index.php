@@ -20,6 +20,7 @@ spl_autoload_register(function (string $class): void {
 
 use App\Controllers\Member\DashboardMemberController;
 use App\Controllers\Public\AuthController;
+use App\Controllers\Public\CatalogPublicController;
 use App\Controllers\Public\HomeController;
 use App\Core\Application;
 use App\Middlewares\AuthenticatedMiddleware;
@@ -30,6 +31,11 @@ $app = new Application(dirname(__DIR__));
 $router = $app->getRouter();
 
 $router->get('/', [HomeController::class, 'index']);
+
+$router->get('/catalog', [CatalogPublicController::class, 'index']);
+$router->get('/catalog/{slug}', [CatalogPublicController::class, 'show']);
+$router->get('/book/{slug}', [CatalogPublicController::class, 'show']);
+$router->get('/api/catalog/suggest', [CatalogPublicController::class, 'searchSuggest']);
 
 $router->get('/login', [AuthController::class, 'showLoginForm'], [GuestOnlyMiddleware::class]);
 $router->post('/login', [AuthController::class, 'login'], [CsrfVerifyMiddleware::class, GuestOnlyMiddleware::class]);

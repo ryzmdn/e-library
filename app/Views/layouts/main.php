@@ -23,5 +23,6 @@
     <?php require dirname(__DIR__) . '/components/footer.php'; ?>
 
     <script src="/assets/js/app.js"></script>
+    <script src="/assets/js/catalog.js"></script>
 </body>
 </html>

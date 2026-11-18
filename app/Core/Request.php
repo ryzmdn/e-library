@@ -22,6 +22,15 @@ final class Request
         $this->postParams = $post ?? $_POST;
         $this->serverParams = $server ?? $_SERVER;
         $this->files = $files ?? $_FILES;
+
+        if (empty($this->getParams) && !empty($this->serverParams['REQUEST_URI'])) {
+            $queryString = parse_url($this->serverParams['REQUEST_URI'], PHP_URL_QUERY);
+            if ($queryString !== null && $queryString !== false && $queryString !== '') {
+                parse_str($queryString, $parsed);
+                $this->getParams = $parsed;
+            }
+        }
+
         $this->headers = $this->extractHeaders();
     }
 
