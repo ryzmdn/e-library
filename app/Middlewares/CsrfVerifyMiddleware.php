@@ -14,7 +14,7 @@ final class CsrfVerifyMiddleware implements MiddlewareInterface
     {
         $method = $request->getMethod();
         if (in_array($method, ['POST', 'PUT', 'PATCH', 'DELETE'], true)) {
-            $token = $request->input('_csrf_token') ?? $request->getHeader('x-csrf-token');
+            $token = $request->input('_csrf_token') ?? $request->input('csrf_token') ?? $request->getHeader('x-csrf-token');
             if (!Session::verifyCsrfToken($token !== null ? (string)$token : null)) {
                 if ($request->isJson()) {
                     return Response::json(['error' => 'Token CSRF tidak valid atau sesi telah kedaluwarsa.'], 419);

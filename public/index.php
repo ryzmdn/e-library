@@ -18,12 +18,31 @@ spl_autoload_register(function (string $class): void {
     }
 });
 
+use App\Controllers\Member\DashboardMemberController;
+use App\Controllers\Public\AuthController;
 use App\Controllers\Public\HomeController;
 use App\Core\Application;
+use App\Middlewares\AuthenticatedMiddleware;
+use App\Middlewares\CsrfVerifyMiddleware;
+use App\Middlewares\GuestOnlyMiddleware;
 
 $app = new Application(dirname(__DIR__));
 $router = $app->getRouter();
 
 $router->get('/', [HomeController::class, 'index']);
+
+$router->get('/login', [AuthController::class, 'showLoginForm'], [GuestOnlyMiddleware::class]);
+$router->post('/login', [AuthController::class, 'login'], [CsrfVerifyMiddleware::class, GuestOnlyMiddleware::class]);
+
+$router->get('/register', [AuthController::class, 'showRegisterForm'], [GuestOnlyMiddleware::class]);
+$router->post('/register', [AuthController::class, 'register'], [CsrfVerifyMiddleware::class, GuestOnlyMiddleware::class]);
+
+$router->post('/logout', [AuthController::class, 'logout'], [CsrfVerifyMiddleware::class]);
+
+$router->group('/member', function ($r): void {
+    $r->get('/dashboard', [DashboardMemberController::class, 'index']);
+    $r->get('/profile', [DashboardMemberController::class, 'profile']);
+    $r->post('/profile', [DashboardMemberController::class, 'updateProfile'], [CsrfVerifyMiddleware::class]);
+}, [AuthenticatedMiddleware::class]);
 
 $app->run();
