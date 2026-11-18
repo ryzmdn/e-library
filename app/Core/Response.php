@@ -56,6 +56,17 @@ final class Response
         return $this->headers;
     }
 
+    public function getHeader(string $name): ?string
+    {
+        $lower = strtolower($name);
+        foreach ($this->headers as $key => $value) {
+            if (strtolower((string)$key) === $lower) {
+                return (string)$value;
+            }
+        }
+        return null;
+    }
+
     public function setContent(string $content): self
     {
         $this->content = $content;

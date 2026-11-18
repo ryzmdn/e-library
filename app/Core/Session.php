@@ -31,6 +31,11 @@ final class Session
             'samesite' => 'Lax',
         ]);
 
+        $savePath = session_save_path();
+        if ($savePath === '' || !is_dir($savePath) || !is_writable($savePath)) {
+            session_save_path(sys_get_temp_dir());
+        }
+
         session_start();
         self::$started = true;
 
