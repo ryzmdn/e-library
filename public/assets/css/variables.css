@@ -1,0 +1,146 @@
+:root {
+  --background: #FFFFFF;
+  --foreground: #09090B;
+  
+  --card: #FFFFFF;
+  --card-foreground: #09090B;
+  
+  --popover: #FFFFFF;
+  --popover-foreground: #09090B;
+  
+  --primary: #18181B;
+  --primary-foreground: #FAFAFA;
+  --primary-hover: #27272A;
+  
+  --secondary: #F4F4F5;
+  --secondary-foreground: #18181B;
+  --secondary-hover: #E4E4E7;
+  
+  --muted: #F4F4F5;
+  --muted-foreground: #71717A;
+  
+  --accent: #F4F4F5;
+  --accent-foreground: #18181B;
+  
+  --destructive: #EF4444;
+  --destructive-foreground: #FAFAFA;
+  --destructive-hover: #DC2626;
+  
+  --border: #E4E4E7;
+  --input: #E4E4E7;
+  --ring: #18181B;
+  
+  --status-available-bg: #ECFDF5;
+  --status-available-text: #065F46;
+  --status-available-border: #A7F3D0;
+  
+  --status-borrowed-bg: #FFFBEB;
+  --status-borrowed-text: #92400E;
+  --status-borrowed-border: #FDE68A;
+  
+  --status-overdue-bg: #FEF2F2;
+  --status-overdue-text: #991B1B;
+  --status-overdue-border: #FECACA;
+
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-full: 9999px;
+  
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="dark"] {
+  --background: #09090B;
+  --foreground: #FAFAFA;
+  
+  --card: #09090B;
+  --card-foreground: #FAFAFA;
+  
+  --popover: #09090B;
+  --popover-foreground: #FAFAFA;
+  
+  --primary: #FAFAFA;
+  --primary-foreground: #18181B;
+  --primary-hover: #E4E4E7;
+  
+  --secondary: #27272A;
+  --secondary-foreground: #FAFAFA;
+  --secondary-hover: #3F3F46;
+  
+  --muted: #27272A;
+  --muted-foreground: #A1A1AA;
+  
+  --accent: #27272A;
+  --accent-foreground: #FAFAFA;
+  
+  --destructive: #7F1D1D;
+  --destructive-foreground: #FAFAFA;
+  --destructive-hover: #991B1B;
+  
+  --border: #27272A;
+  --input: #27272A;
+  --ring: #D4D4D8;
+  
+  --status-available-bg: #064E3B;
+  --status-available-text: #A7F3D0;
+  --status-available-border: #047857;
+  
+  --status-borrowed-bg: #78350F;
+  --status-borrowed-text: #FDE68A;
+  --status-borrowed-border: #B45309;
+  
+  --status-overdue-bg: #7F1D1D;
+  --status-overdue-text: #FECACA;
+  --status-overdue-border: #B91C1C;
+}
+
+[data-theme="sepia"] {
+  --background: #FBF7EE;
+  --foreground: #382F2D;
+  
+  --card: #FDFBF7;
+  --card-foreground: #382F2D;
+  
+  --popover: #FDFBF7;
+  --popover-foreground: #382F2D;
+  
+  --primary: #6B4E3D;
+  --primary-foreground: #FBF7EE;
+  --primary-hover: #543D2F;
+  
+  --secondary: #EFE8DC;
+  --secondary-foreground: #382F2D;
+  --secondary-hover: #E4DAC9;
+  
+  --muted: #EFE8DC;
+  --muted-foreground: #7E726B;
+  
+  --accent: #EFE8DC;
+  --accent-foreground: #382F2D;
+  
+  --destructive: #A33A3A;
+  --destructive-foreground: #FBF7EE;
+  --destructive-hover: #8B2E2E;
+  
+  --border: #DFD5C4;
+  --input: #DFD5C4;
+  --ring: #6B4E3D;
+  
+  --status-available-bg: #E8F3EB;
+  --status-available-text: #2D5A38;
+  --status-available-border: #B8DEC0;
+  
+  --status-borrowed-bg: #F8F0DC;
+  --status-borrowed-text: #785A1D;
+  --status-borrowed-border: #E8D4A2;
+  
+  --status-overdue-bg: #F6E7E7;
+  --status-overdue-text: #8A2E2E;
+  --status-overdue-border: #E8B6B6;
+}
