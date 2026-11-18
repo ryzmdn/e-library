@@ -1,0 +1,14 @@
+CREATE TABLE IF NOT EXISTS digital_assets (
+    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    biblio_id BIGINT UNSIGNED NOT NULL,
+    storage_filename_hash CHAR(64) NOT NULL UNIQUE,
+    file_format ENUM('PDF', 'EPUB', 'AUDIO_MP3') NOT NULL DEFAULT 'PDF',
+    file_size_bytes BIGINT UNSIGNED NOT NULL,
+    sha256_checksum CHAR(64) NOT NULL,
+    access_level ENUM('PUBLIC_OPEN', 'MEMBER_STREAM_ONLY', 'THESIS_ABSTRACT_ONLY') NOT NULL DEFAULT 'MEMBER_STREAM_ONLY',
+    max_concurrent_readers SMALLINT UNSIGNED NOT NULL DEFAULT 0,
+    uploaded_by BIGINT UNSIGNED NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_digital_biblio FOREIGN KEY (biblio_id) REFERENCES bibliographic_items(id) ON DELETE CASCADE,
+    CONSTRAINT fk_digital_uploader FOREIGN KEY (uploaded_by) REFERENCES users(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

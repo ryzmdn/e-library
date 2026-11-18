@@ -1,0 +1,16 @@
+CREATE TABLE IF NOT EXISTS room_bookings (
+    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    booking_code VARCHAR(32) NOT NULL UNIQUE,
+    user_id BIGINT UNSIGNED NOT NULL,
+    room_name VARCHAR(80) NOT NULL,
+    room_type ENUM('INDIVIDUAL_POD', 'GROUP_DISCUSSION', 'SEMINAR_AUDIOVISUAL') NOT NULL DEFAULT 'INDIVIDUAL_POD',
+    booking_date DATE NOT NULL,
+    start_time TIME NOT NULL,
+    end_time TIME NOT NULL,
+    purpose VARCHAR(255) NOT NULL,
+    booking_status ENUM('CONFIRMED', 'CHECKED_IN', 'COMPLETED', 'CANCELLED', 'NO_SHOW') NOT NULL DEFAULT 'CONFIRMED',
+    check_in_time DATETIME DEFAULT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_booking_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE RESTRICT,
+    INDEX idx_room_schedule (room_name, booking_date, start_time, end_time)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
