@@ -94,9 +94,13 @@ $ratingCount = (int)($item['rating_count'] ?? 0);
 
                 <?php if ($totalCopies > 0 && $availableCopies === 0): ?>
                     <?php if ($user !== null): ?>
-                        <a href="/member/reservations" class="btn btn-outline" style="width:100%; text-align:center;">
-                            Antre Reservasi Peminjaman
-                        </a>
+                        <form method="POST" action="/member/reservations" style="width:100%;">
+                            <input type="hidden" name="_csrf_token" value="<?= htmlspecialchars(\App\Core\Session::getCsrfToken(), ENT_QUOTES, 'UTF-8') ?>">
+                            <input type="hidden" name="biblio_id" value="<?= (int)$item['id'] ?>">
+                            <button type="submit" class="btn btn-outline" style="width:100%;">
+                                Antre Reservasi Peminjaman
+                            </button>
+                        </form>
                     <?php else: ?>
                         <a href="/login" class="btn btn-outline" style="width:100%; text-align:center;">
                             Masuk untuk Reservasi

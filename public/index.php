@@ -18,7 +18,11 @@ spl_autoload_register(function (string $class): void {
     }
 });
 
+use App\Controllers\Admin\CirculationAdminController;
+use App\Controllers\Admin\FineAdminController;
 use App\Controllers\Member\DashboardMemberController;
+use App\Controllers\Member\LoanMemberController;
+use App\Controllers\Member\ReservationMemberController;
 use App\Controllers\Public\AuthController;
 use App\Controllers\Public\CatalogPublicController;
 use App\Controllers\Public\HomeController;
@@ -26,6 +30,7 @@ use App\Core\Application;
 use App\Middlewares\AuthenticatedMiddleware;
 use App\Middlewares\CsrfVerifyMiddleware;
 use App\Middlewares\GuestOnlyMiddleware;
+use App\Middlewares\RoleAuthorizeMiddleware;
 
 $app = new Application(dirname(__DIR__));
 $router = $app->getRouter();
@@ -49,6 +54,25 @@ $router->group('/member', function ($r): void {
     $r->get('/dashboard', [DashboardMemberController::class, 'index']);
     $r->get('/profile', [DashboardMemberController::class, 'profile']);
     $r->post('/profile', [DashboardMemberController::class, 'updateProfile'], [CsrfVerifyMiddleware::class]);
+
+    $r->get('/loans', [LoanMemberController::class, 'index']);
+    $r->post('/loans/{id}/renew', [LoanMemberController::class, 'renew'], [CsrfVerifyMiddleware::class]);
+
+    $r->get('/reservations', [ReservationMemberController::class, 'index']);
+    $r->post('/reservations', [ReservationMemberController::class, 'create'], [CsrfVerifyMiddleware::class]);
+    $r->post('/reservations/{id}/cancel', [ReservationMemberController::class, 'cancel'], [CsrfVerifyMiddleware::class]);
 }, [AuthenticatedMiddleware::class]);
+
+$staffAuth = new RoleAuthorizeMiddleware('SUPER_ADMIN', 'LIBRARIAN');
+
+$router->group('/admin', function ($r): void {
+    $r->get('/circulation', [CirculationAdminController::class, 'index']);
+    $r->post('/circulation/checkout', [CirculationAdminController::class, 'checkout'], [CsrfVerifyMiddleware::class]);
+    $r->post('/circulation/checkin', [CirculationAdminController::class, 'checkin'], [CsrfVerifyMiddleware::class]);
+    $r->get('/circulation/history', [CirculationAdminController::class, 'history']);
+
+    $r->get('/fines', [FineAdminController::class, 'index']);
+    $r->post('/fines/pay', [FineAdminController::class, 'pay'], [CsrfVerifyMiddleware::class]);
+}, [AuthenticatedMiddleware::class, $staffAuth]);
 
 $app->run();
