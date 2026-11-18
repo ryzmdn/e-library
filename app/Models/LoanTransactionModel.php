@@ -224,9 +224,24 @@ final class LoanTransactionModel extends Model
             INNER JOIN bibliographic_items bi ON bc.biblio_id = bi.id
             INNER JOIN users u ON lt.user_id = u.id
             INNER JOIN membership_tiers t ON u.tier_id = t.id
-            WHERE lt.loan_status = 'ACTIVE' AND lt.due_date < :today
+            WHERE lt.loan_status IN ('ACTIVE', 'OVERDUE') AND lt.due_date < :today
         ";
         return $this->fetchAll($sql, [':today' => $today]);
+    }
+
+    public function updateOverdueStatus(int $loanId, float $accruedFine): bool
+    {
+        $sql = "
+            UPDATE loan_transactions
+            SET loan_status = 'OVERDUE',
+                accrued_fine = :fine,
+                fine_settled = 0
+            WHERE id = :id
+        ";
+        return $this->execute($sql, [
+            ':fine' => round($accruedFine, 2),
+            ':id' => $loanId,
+        ]);
     }
 
     public function getAllLoans(array $filters = [], int $limit = 15, int $offset = 0): array

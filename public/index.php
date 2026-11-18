@@ -24,6 +24,7 @@ use App\Controllers\Admin\CirculationAdminController;
 use App\Controllers\Admin\DashboardAdminController;
 use App\Controllers\Admin\FineAdminController;
 use App\Controllers\Admin\MemberAdminController;
+use App\Controllers\Admin\TaskAdminController;
 use App\Controllers\Member\DashboardMemberController;
 use App\Controllers\Member\DigitalReaderController;
 use App\Controllers\Member\LoanMemberController;
@@ -106,6 +107,11 @@ $router->group('/admin', function ($r): void {
 
     $r->get('/fines', [FineAdminController::class, 'index']);
     $r->post('/fines/pay', [FineAdminController::class, 'pay'], [CsrfVerifyMiddleware::class]);
+
+    $r->get('/tasks', [TaskAdminController::class, 'index']);
+    $r->post('/tasks/fines', [TaskAdminController::class, 'runFines'], [CsrfVerifyMiddleware::class]);
+    $r->post('/tasks/reservations', [TaskAdminController::class, 'runReservations'], [CsrfVerifyMiddleware::class]);
+    $r->post('/tasks/run-all', [TaskAdminController::class, 'runAll'], [CsrfVerifyMiddleware::class]);
 }, [AuthenticatedMiddleware::class, $staffAuth]);
 
 $app->run();

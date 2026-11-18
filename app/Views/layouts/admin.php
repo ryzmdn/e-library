@@ -25,6 +25,7 @@
             <a href="/admin/copies" class="admin-sidebar-link">Eksemplar & Barcode</a>
             <a href="/admin/members" class="admin-sidebar-link">Manajemen Anggota</a>
             <a href="/admin/fines" class="admin-sidebar-link">Kasir & Buku Besar Denda</a>
+            <a href="/admin/tasks" class="admin-sidebar-link">Tugas Terjadwal (Cron)</a>
         </aside>
 
         <section class="admin-content">

@@ -36,6 +36,16 @@ final class FineLedgerModel extends Model
         return max(0.00, round($balance, 2));
     }
 
+    public function getTotalAssessedFineForLoan(int $loanId): float
+    {
+        $sql = "
+            SELECT IFNULL(SUM(amount), 0.00)
+            FROM fine_ledgers
+            WHERE loan_id = :loan_id AND entry_type = 'FINE_ASSESSMENT'
+        ";
+        return (float)$this->query($sql, [':loan_id' => $loanId])->fetchColumn();
+    }
+
     public function getLedgerByUserId(int $userId, int $limit = 20): array
     {
         $sql = "

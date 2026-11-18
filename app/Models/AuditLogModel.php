@@ -59,4 +59,20 @@ final class AuditLogModel extends Model
 
         return $stmt->fetchAll();
     }
+
+    public function getTaskLogs(int $limit = 20): array
+    {
+        $sql = "
+            SELECT al.*, u.full_name AS actor_name
+            FROM audit_logs al
+            LEFT JOIN users u ON al.actor_user_id = u.id
+            WHERE al.action_event LIKE 'SYSTEM_%'
+            ORDER BY al.id DESC
+            LIMIT :limit
+        ";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll();
+    }
 }
