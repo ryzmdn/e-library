@@ -18,8 +18,12 @@ spl_autoload_register(function (string $class): void {
     }
 });
 
+use App\Controllers\Admin\BookCopyAdminController;
+use App\Controllers\Admin\CatalogAdminController;
 use App\Controllers\Admin\CirculationAdminController;
+use App\Controllers\Admin\DashboardAdminController;
 use App\Controllers\Admin\FineAdminController;
+use App\Controllers\Admin\MemberAdminController;
 use App\Controllers\Member\DashboardMemberController;
 use App\Controllers\Member\DigitalReaderController;
 use App\Controllers\Member\LoanMemberController;
@@ -68,13 +72,37 @@ $router->group('/member', function ($r): void {
     $r->post('/reservations/{id}/cancel', [ReservationMemberController::class, 'cancel'], [CsrfVerifyMiddleware::class]);
 }, [AuthenticatedMiddleware::class]);
 
-$staffAuth = new RoleAuthorizeMiddleware('SUPER_ADMIN', 'LIBRARIAN');
+$staffAuth = new RoleAuthorizeMiddleware('SUPER_ADMIN', 'LIBRARIAN', 'CATALOGER');
 
 $router->group('/admin', function ($r): void {
+    $r->get('', [DashboardAdminController::class, 'index']);
+    $r->get('/dashboard', [DashboardAdminController::class, 'index']);
+
+    $r->get('/catalog', [CatalogAdminController::class, 'index']);
+    $r->get('/catalog/create', [CatalogAdminController::class, 'create']);
+    $r->post('/catalog/create', [CatalogAdminController::class, 'create'], [CsrfVerifyMiddleware::class]);
+    $r->get('/catalog/{id}/edit', [CatalogAdminController::class, 'edit']);
+    $r->post('/catalog/{id}/edit', [CatalogAdminController::class, 'edit'], [CsrfVerifyMiddleware::class]);
+    $r->post('/catalog/{id}/delete', [CatalogAdminController::class, 'delete'], [CsrfVerifyMiddleware::class]);
+
+    $r->get('/copies', [BookCopyAdminController::class, 'index']);
+    $r->get('/copies/create', [BookCopyAdminController::class, 'create']);
+    $r->post('/copies/create', [BookCopyAdminController::class, 'create'], [CsrfVerifyMiddleware::class]);
+    $r->get('/copies/{id}/edit', [BookCopyAdminController::class, 'edit']);
+    $r->post('/copies/{id}/edit', [BookCopyAdminController::class, 'edit'], [CsrfVerifyMiddleware::class]);
+    $r->post('/copies/{id}/delete', [BookCopyAdminController::class, 'delete'], [CsrfVerifyMiddleware::class]);
+    $r->get('/copies/{id}/label', [BookCopyAdminController::class, 'label']);
+
     $r->get('/circulation', [CirculationAdminController::class, 'index']);
     $r->post('/circulation/checkout', [CirculationAdminController::class, 'checkout'], [CsrfVerifyMiddleware::class]);
     $r->post('/circulation/checkin', [CirculationAdminController::class, 'checkin'], [CsrfVerifyMiddleware::class]);
     $r->get('/circulation/history', [CirculationAdminController::class, 'history']);
+
+    $r->get('/members', [MemberAdminController::class, 'index']);
+    $r->get('/members/{id}', [MemberAdminController::class, 'detail']);
+    $r->post('/members/{id}/status', [MemberAdminController::class, 'updateStatus'], [CsrfVerifyMiddleware::class]);
+    $r->post('/members/{id}/tier', [MemberAdminController::class, 'updateTier'], [CsrfVerifyMiddleware::class]);
+    $r->post('/members/{id}/extend', [MemberAdminController::class, 'extendMembership'], [CsrfVerifyMiddleware::class]);
 
     $r->get('/fines', [FineAdminController::class, 'index']);
     $r->post('/fines/pay', [FineAdminController::class, 'pay'], [CsrfVerifyMiddleware::class]);

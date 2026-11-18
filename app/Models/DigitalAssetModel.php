@@ -76,4 +76,34 @@ final class DigitalAssetModel extends Model
 
         return round($bytes, $precision) . ' ' . $units[$pow];
     }
+
+    public function createAsset(array $data): int
+    {
+        $sql = "
+            INSERT INTO digital_assets (
+                biblio_id, storage_filename_hash, file_format, file_size_bytes,
+                sha256_checksum, access_level, max_concurrent_readers, uploaded_by, created_at
+            ) VALUES (
+                :biblio_id, :hash, :format, :size,
+                :checksum, :access, :max_readers, :uploader, CURRENT_TIMESTAMP
+            )
+        ";
+        $this->execute($sql, [
+            ':biblio_id' => (int)$data['biblio_id'],
+            ':hash' => $data['storage_filename_hash'],
+            ':format' => $data['file_format'] ?? 'PDF',
+            ':size' => (int)$data['file_size_bytes'],
+            ':checksum' => $data['sha256_checksum'],
+            ':access' => $data['access_level'] ?? 'MEMBER_STREAM_ONLY',
+            ':max_readers' => (int)($data['max_concurrent_readers'] ?? 0),
+            ':uploader' => (int)$data['uploaded_by'],
+        ]);
+        return (int)$this->lastInsertId();
+    }
+
+    public function deleteByBiblioId(int $biblioId): bool
+    {
+        $sql = "DELETE FROM digital_assets WHERE biblio_id = :biblio_id";
+        return $this->execute($sql, [':biblio_id' => $biblioId]);
+    }
 }

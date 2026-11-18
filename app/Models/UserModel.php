@@ -197,4 +197,112 @@ final class UserModel extends Model
             ':id' => $id,
         ]);
     }
+
+    public function getAllUsers(array $filters = [], int $limit = 20, int $offset = 0): array
+    {
+        [$whereSql, $params] = $this->buildFilterCriteria($filters);
+
+        $sql = "
+            SELECT u.*, t.tier_name, t.max_physical_loans
+            FROM users u
+            INNER JOIN membership_tiers t ON u.tier_id = t.id
+            {$whereSql}
+            ORDER BY u.id DESC
+            LIMIT :limit OFFSET :offset
+        ";
+
+        $stmt = $this->db->prepare($sql);
+        foreach ($params as $k => $v) {
+            $stmt->bindValue($k, $v);
+        }
+        $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+        $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+        $stmt->execute();
+
+        return $stmt->fetchAll();
+    }
+
+    public function countAllUsers(array $filters = []): int
+    {
+        [$whereSql, $params] = $this->buildFilterCriteria($filters);
+        $sql = "SELECT COUNT(*) FROM users u {$whereSql}";
+        $stmt = $this->db->prepare($sql);
+        foreach ($params as $k => $v) {
+            $stmt->bindValue($k, $v);
+        }
+        $stmt->execute();
+
+        return (int)$stmt->fetchColumn();
+    }
+
+    public function updateAccountStatus(int $id, string $status): bool
+    {
+        $allowed = ['PENDING_VERIFICATION', 'ACTIVE', 'SUSPENDED', 'GRADUATED_CLEAR'];
+        if (!in_array($status, $allowed, true)) {
+            return false;
+        }
+
+        $sql = "UPDATE users SET account_status = :status WHERE id = :id";
+        return $this->execute($sql, [':status' => $status, ':id' => $id]);
+    }
+
+    public function updateTier(int $id, int $tierId): bool
+    {
+        $sql = "UPDATE users SET tier_id = :tier WHERE id = :id";
+        return $this->execute($sql, [':tier' => $tierId, ':id' => $id]);
+    }
+
+    public function extendMembership(int $id, int $months = 12): bool
+    {
+        $user = $this->findById($id);
+        if (!$user) {
+            return false;
+        }
+
+        $currentExp = (string)($user['membership_expires_at'] ?? date('Y-m-d'));
+        $baseDate = ($currentExp >= date('Y-m-d')) ? $currentExp : date('Y-m-d');
+        $newExp = date('Y-m-d', strtotime("{$baseDate} +{$months} months"));
+
+        $sql = "UPDATE users SET membership_expires_at = :new_exp WHERE id = :id";
+        return $this->execute($sql, [':new_exp' => $newExp, ':id' => $id]);
+    }
+
+    public function countTotalMembers(): int
+    {
+        return $this->countRows("SELECT COUNT(*) FROM users WHERE role = 'MEMBER'");
+    }
+
+    public function countActiveMembers(): int
+    {
+        return $this->countRows("SELECT COUNT(*) FROM users WHERE role = 'MEMBER' AND account_status = 'ACTIVE'");
+    }
+
+    private function buildFilterCriteria(array $filters): array
+    {
+        $conditions = [];
+        $params = [];
+
+        if (!empty($filters['role'])) {
+            $conditions[] = "u.role = :role";
+            $params[':role'] = $filters['role'];
+        }
+
+        if (!empty($filters['status'])) {
+            $conditions[] = "u.account_status = :status";
+            $params[':status'] = $filters['status'];
+        }
+
+        if (!empty($filters['tier_id'])) {
+            $conditions[] = "u.tier_id = :tier_id";
+            $params[':tier_id'] = (int)$filters['tier_id'];
+        }
+
+        if (!empty($filters['keyword'])) {
+            $conditions[] = "(u.full_name LIKE :kw OR u.email LIKE :kw OR u.member_number LIKE :kw OR u.phone_number LIKE :kw)";
+            $params[':kw'] = '%' . trim($filters['keyword']) . '%';
+        }
+
+        $whereSql = !empty($conditions) ? 'WHERE ' . implode(' AND ', $conditions) : '';
+        return [$whereSql, $params];
+    }
 }

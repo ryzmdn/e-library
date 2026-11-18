@@ -295,6 +295,18 @@ final class LoanTransactionModel extends Model
         return $this->countRows($sql, [':start' => $start, ':end' => $end]);
     }
 
+    public function countActiveLoans(): int
+    {
+        $sql = "SELECT COUNT(*) FROM loan_transactions WHERE loan_status IN ('ACTIVE', 'OVERDUE')";
+        return $this->countRows($sql);
+    }
+
+    public function countOverdueLoans(): int
+    {
+        $sql = "SELECT COUNT(*) FROM loan_transactions WHERE loan_status = 'OVERDUE' OR (loan_status = 'ACTIVE' AND due_date < :today)";
+        return $this->countRows($sql, [':today' => date('Y-m-d')]);
+    }
+
     private function buildFilterCriteria(array $filters): array
     {
         $conditions = [];

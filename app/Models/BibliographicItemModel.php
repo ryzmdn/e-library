@@ -289,6 +289,172 @@ final class BibliographicItemModel extends Model
         return [$whereSql, $params];
     }
 
+    public function createItem(array $data): int
+    {
+        $slug = $this->generateSlug($data['title']);
+
+        $sql = "
+            INSERT INTO bibliographic_items (
+                slug, isbn_13, issn, ddc_code, call_number_base, title, subtitle,
+                authors_text, publisher_name, publication_year, edition_statement,
+                language_code, physical_pages, synopsis, subject_tags, media_type,
+                cover_image_path, total_physical_copies, available_physical_copies
+            ) VALUES (
+                :slug, :isbn_13, :issn, :ddc_code, :call_number_base, :title, :subtitle,
+                :authors_text, :publisher_name, :publication_year, :edition_statement,
+                :language_code, :physical_pages, :synopsis, :subject_tags, :media_type,
+                :cover_image_path, 0, 0
+            )
+        ";
+
+        $this->execute($sql, [
+            ':slug' => $slug,
+            ':isbn_13' => !empty($data['isbn_13']) ? trim((string)$data['isbn_13']) : null,
+            ':issn' => !empty($data['issn']) ? trim((string)$data['issn']) : null,
+            ':ddc_code' => !empty($data['ddc_code']) ? trim((string)$data['ddc_code']) : null,
+            ':call_number_base' => !empty($data['call_number_base']) ? trim((string)$data['call_number_base']) : null,
+            ':title' => trim((string)$data['title']),
+            ':subtitle' => !empty($data['subtitle']) ? trim((string)$data['subtitle']) : null,
+            ':authors_text' => !empty($data['authors_text']) ? trim((string)$data['authors_text']) : null,
+            ':publisher_name' => !empty($data['publisher_name']) ? trim((string)$data['publisher_name']) : null,
+            ':publication_year' => !empty($data['publication_year']) ? (int)$data['publication_year'] : null,
+            ':edition_statement' => !empty($data['edition_statement']) ? trim((string)$data['edition_statement']) : null,
+            ':language_code' => !empty($data['language_code']) ? trim((string)$data['language_code']) : 'id',
+            ':physical_pages' => !empty($data['physical_pages']) ? (int)$data['physical_pages'] : null,
+            ':synopsis' => !empty($data['synopsis']) ? trim((string)$data['synopsis']) : null,
+            ':subject_tags' => !empty($data['subject_tags']) ? trim((string)$data['subject_tags']) : null,
+            ':media_type' => $data['media_type'] ?? 'PRINTED_BOOK',
+            ':cover_image_path' => $data['cover_image_path'] ?? null,
+        ]);
+
+        return (int)$this->lastInsertId();
+    }
+
+    public function updateItem(int $id, array $data): bool
+    {
+        $fields = [];
+        $params = [':id' => $id];
+
+        $allowedKeys = [
+            'isbn_13', 'issn', 'ddc_code', 'call_number_base', 'title', 'subtitle',
+            'authors_text', 'publisher_name', 'publication_year', 'edition_statement',
+            'language_code', 'physical_pages', 'synopsis', 'subject_tags', 'media_type',
+            'cover_image_path'
+        ];
+
+        foreach ($allowedKeys as $key) {
+            if (array_key_exists($key, $data)) {
+                $fields[] = "{$key} = :{$key}";
+                $val = $data[$key];
+                if (in_array($key, ['publication_year', 'physical_pages'], true)) {
+                    $params[":{$key}"] = ($val !== null && $val !== '') ? (int)$val : null;
+                } else {
+                    $params[":{$key}"] = ($val !== null && $val !== '') ? trim((string)$val) : null;
+                }
+            }
+        }
+
+        if (isset($data['title'])) {
+            $fields[] = "slug = :slug";
+            $params[':slug'] = $this->generateSlug($data['title'], $id);
+        }
+
+        if (empty($fields)) {
+            return true;
+        }
+
+        $sql = "UPDATE bibliographic_items SET " . implode(', ', $fields) . " WHERE id = :id";
+        return $this->execute($sql, $params);
+    }
+
+    public function deleteItem(int $id): bool
+    {
+        $borrowedCount = $this->countRows("
+            SELECT COUNT(*) FROM book_copies
+            WHERE biblio_id = :id AND availability_status = 'BORROWED'
+        ", [':id' => $id]);
+
+        if ($borrowedCount > 0) {
+            return false;
+        }
+
+        $this->execute("DELETE FROM book_copies WHERE biblio_id = :id", [':id' => $id]);
+        $this->execute("DELETE FROM digital_assets WHERE biblio_id = :id", [':id' => $id]);
+        $this->execute("DELETE FROM reservation_queues WHERE biblio_id = :id", [':id' => $id]);
+
+        return $this->execute("DELETE FROM bibliographic_items WHERE id = :id", [':id' => $id]);
+    }
+
+    public function generateSlug(string $title, ?int $excludeId = null): string
+    {
+        $slug = strtolower(trim($title));
+        $slug = preg_replace('/[^a-z0-9]+/i', '-', $slug);
+        $slug = trim($slug, '-');
+        if ($slug === '') {
+            $slug = 'item-' . time();
+        }
+
+        $originalSlug = $slug;
+        $counter = 1;
+
+        while (true) {
+            $sql = "SELECT COUNT(*) FROM bibliographic_items WHERE slug = :slug";
+            $params = [':slug' => $slug];
+            if ($excludeId !== null) {
+                $sql .= " AND id != :exclude_id";
+                $params[':exclude_id'] = $excludeId;
+            }
+
+            if ($this->countRows($sql, $params) === 0) {
+                break;
+            }
+
+            $slug = "{$originalSlug}-{$counter}";
+            $counter++;
+        }
+
+        return $slug;
+    }
+
+    public function getAllItemsAdmin(array $filters = [], int $limit = 15, int $offset = 0): array
+    {
+        [$whereSql, $params] = $this->buildSearchCriteria($filters['keyword'] ?? '', $filters);
+
+        $sql = "
+            SELECT id, slug, isbn_13, issn, ddc_code, call_number_base, title, subtitle,
+                   authors_text, publisher_name, publication_year, media_type,
+                   cover_image_path, total_physical_copies, available_physical_copies,
+                   created_at
+            FROM bibliographic_items
+            {$whereSql}
+            ORDER BY id DESC
+            LIMIT :limit OFFSET :offset
+        ";
+
+        $stmt = $this->db->prepare($sql);
+        foreach ($params as $k => $v) {
+            $stmt->bindValue($k, $v);
+        }
+        $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+        $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+        $stmt->execute();
+
+        return $stmt->fetchAll();
+    }
+
+    public function countAllItemsAdmin(array $filters = []): int
+    {
+        [$whereSql, $params] = $this->buildSearchCriteria($filters['keyword'] ?? '', $filters);
+        $sql = "SELECT COUNT(*) FROM bibliographic_items {$whereSql}";
+        $stmt = $this->db->prepare($sql);
+        foreach ($params as $k => $v) {
+            $stmt->bindValue($k, $v);
+        }
+        $stmt->execute();
+
+        return (int)$stmt->fetchColumn();
+    }
+
     private function resolveSortColumn(string $sort): string
     {
         return match ($sort) {
