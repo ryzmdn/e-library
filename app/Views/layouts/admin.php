@@ -34,6 +34,8 @@
         </section>
     </div>
 
+    <?php require dirname(__DIR__) . '/components/quick-search-modal.php'; ?>
+
     <script src="/assets/js/app.js"></script>
     <script src="/assets/js/circulation.js"></script>
 </body>

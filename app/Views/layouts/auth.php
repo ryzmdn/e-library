@@ -14,8 +14,14 @@
     <div class="auth-wrapper">
         <div class="auth-card">
             <div style="text-align:center; margin-bottom:1.5rem;">
-                <a href="/" style="font-size:1.5rem; font-weight:700; letter-spacing:-0.03em;">
-                    <?= htmlspecialchars($appName ?? 'E-Library', ENT_QUOTES, 'UTF-8') ?>
+                <a href="/" style="display:inline-flex; align-items:center; gap:0.5rem; text-decoration:none; color:var(--foreground); font-weight:700; font-size:1.35rem; letter-spacing:-0.02em;">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--primary);">
+                        <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"></path>
+                        <path d="M6 6h10"></path>
+                        <path d="M6 10h10"></path>
+                    </svg>
+                    <span>RuangBaca</span>
+                    <span class="brand-badge">E-Perpus</span>
                 </a>
             </div>
             <?php require dirname(__DIR__) . '/components/alert.php'; ?>

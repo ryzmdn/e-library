@@ -18,7 +18,7 @@ abstract class Controller
         }
 
         $globalData = [
-            'appName' => Environment::get('APP_NAME', 'E-Library'),
+            'appName' => Environment::get('APP_NAME', 'RuangBaca'),
             'appUrl' => Environment::get('APP_URL', ''),
             'csrfToken' => Session::getCsrfToken(),
             'isAuthenticated' => Session::isAuthenticated(),

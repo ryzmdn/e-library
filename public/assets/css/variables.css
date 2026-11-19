@@ -1,146 +1,205 @@
 :root {
   --background: #FFFFFF;
-  --foreground: #09090B;
-  
+  --foreground: #0F172A;
+
   --card: #FFFFFF;
-  --card-foreground: #09090B;
-  
+  --card-foreground: #0F172A;
+  --card-border: #E2E8F0;
+
   --popover: #FFFFFF;
-  --popover-foreground: #09090B;
-  
-  --primary: #18181B;
-  --primary-foreground: #FAFAFA;
-  --primary-hover: #27272A;
-  
-  --secondary: #F4F4F5;
-  --secondary-foreground: #18181B;
-  --secondary-hover: #E4E4E7;
-  
-  --muted: #F4F4F5;
-  --muted-foreground: #71717A;
-  
-  --accent: #F4F4F5;
-  --accent-foreground: #18181B;
-  
+  --popover-foreground: #0F172A;
+
+  --primary: #3E49D7;
+  --primary-foreground: #FFFFFF;
+  --primary-hover: #313BAC;
+  --primary-active: #262E89;
+  --primary-subtle: #EEF2FF;
+  --primary-subtle-text: #3730A3;
+  --primary-subtle-border: #C7D2FE;
+
+  --secondary: #F8FAFC;
+  --secondary-foreground: #0F172A;
+  --secondary-hover: #F1F5F9;
+
+  --muted: #F8FAFC;
+  --muted-foreground: #64748B;
+
+  --accent: #EEF2FF;
+  --accent-foreground: #3E49D7;
+
   --destructive: #EF4444;
-  --destructive-foreground: #FAFAFA;
+  --destructive-foreground: #FFFFFF;
   --destructive-hover: #DC2626;
-  
-  --border: #E4E4E7;
-  --input: #E4E4E7;
-  --ring: #18181B;
-  
+
+  --border: #E2E8F0;
+  --border-subtle: #F1F5F9;
+  --input: #E2E8F0;
+  --input-focus: #3E49D7;
+  --ring: rgba(62, 73, 215, 0.25);
+
   --status-available-bg: #ECFDF5;
   --status-available-text: #065F46;
   --status-available-border: #A7F3D0;
-  
-  --status-borrowed-bg: #FFFBEB;
-  --status-borrowed-text: #92400E;
-  --status-borrowed-border: #FDE68A;
-  
+  --status-available-dot: #10B981;
+
+  --status-borrowed-bg: #EFF6FF;
+  --status-borrowed-text: #1E40AF;
+  --status-borrowed-border: #BFDBFE;
+  --status-borrowed-dot: #3E49D7;
+
+  --status-waiting-bg: #FFFBEB;
+  --status-waiting-text: #92400E;
+  --status-waiting-border: #FDE68A;
+  --status-waiting-dot: #F59E0B;
+
   --status-overdue-bg: #FEF2F2;
   --status-overdue-text: #991B1B;
   --status-overdue-border: #FECACA;
+  --status-overdue-dot: #EF4444;
 
-  --radius-sm: 4px;
-  --radius-md: 6px;
-  --radius-lg: 8px;
-  --radius-full: 9999px;
-  
+  --radius-xs: 4px;
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-2xl: 20px;
+  --radius-pill: 9999px;
+
   --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 
-  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.04);
+  --shadow-card: 0 2px 10px rgba(15, 23, 42, 0.04), 0 1px 3px rgba(15, 23, 42, 0.02);
+  --shadow-elevated: 0 10px 25px -5px rgba(62, 73, 215, 0.08), 0 8px 10px -6px rgba(62, 73, 215, 0.04);
+  --shadow-modal: 0 20px 25px -5px rgba(15, 23, 42, 0.1), 0 10px 10px -5px rgba(15, 23, 42, 0.04);
 }
 
 [data-theme="dark"] {
-  --background: #09090B;
-  --foreground: #FAFAFA;
-  
-  --card: #09090B;
-  --card-foreground: #FAFAFA;
-  
-  --popover: #09090B;
-  --popover-foreground: #FAFAFA;
-  
-  --primary: #FAFAFA;
-  --primary-foreground: #18181B;
-  --primary-hover: #E4E4E7;
-  
-  --secondary: #27272A;
-  --secondary-foreground: #FAFAFA;
-  --secondary-hover: #3F3F46;
-  
-  --muted: #27272A;
-  --muted-foreground: #A1A1AA;
-  
-  --accent: #27272A;
-  --accent-foreground: #FAFAFA;
-  
-  --destructive: #7F1D1D;
-  --destructive-foreground: #FAFAFA;
-  --destructive-hover: #991B1B;
-  
-  --border: #27272A;
-  --input: #27272A;
-  --ring: #D4D4D8;
-  
+  --background: #0B0F19;
+  --foreground: #F8FAFC;
+
+  --card: #111827;
+  --card-foreground: #F8FAFC;
+  --card-border: #1F2937;
+
+  --popover: #111827;
+  --popover-foreground: #F8FAFC;
+
+  --primary: #6366F1;
+  --primary-foreground: #FFFFFF;
+  --primary-hover: #4F46E5;
+  --primary-active: #4338CA;
+  --primary-subtle: #1E1B4B;
+  --primary-subtle-text: #C7D2FE;
+  --primary-subtle-border: #312E81;
+
+  --secondary: #1F2937;
+  --secondary-foreground: #F8FAFC;
+  --secondary-hover: #374151;
+
+  --muted: #1F2937;
+  --muted-foreground: #94A3B8;
+
+  --accent: #1E1B4B;
+  --accent-foreground: #A5B4FC;
+
+  --destructive: #EF4444;
+  --destructive-foreground: #FFFFFF;
+  --destructive-hover: #DC2626;
+
+  --border: #1F2937;
+  --border-subtle: #111827;
+  --input: #1F2937;
+  --input-focus: #6366F1;
+  --ring: rgba(99, 102, 241, 0.35);
+
   --status-available-bg: #064E3B;
   --status-available-text: #A7F3D0;
   --status-available-border: #047857;
-  
-  --status-borrowed-bg: #78350F;
-  --status-borrowed-text: #FDE68A;
-  --status-borrowed-border: #B45309;
-  
+  --status-available-dot: #34D399;
+
+  --status-borrowed-bg: #1E1B4B;
+  --status-borrowed-text: #C7D2FE;
+  --status-borrowed-border: #312E81;
+  --status-borrowed-dot: #818CF8;
+
+  --status-waiting-bg: #78350F;
+  --status-waiting-text: #FDE68A;
+  --status-waiting-border: #B45309;
+  --status-waiting-dot: #FBBF24;
+
   --status-overdue-bg: #7F1D1D;
   --status-overdue-text: #FECACA;
   --status-overdue-border: #B91C1C;
+  --status-overdue-dot: #F87171;
+
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.4);
+  --shadow-card: 0 2px 10px rgba(0, 0, 0, 0.3);
+  --shadow-elevated: 0 10px 25px -5px rgba(0, 0, 0, 0.4);
+  --shadow-modal: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
 }
 
 [data-theme="sepia"] {
   --background: #FBF7EE;
   --foreground: #382F2D;
-  
+
   --card: #FDFBF7;
   --card-foreground: #382F2D;
-  
+  --card-border: #E8DECE;
+
   --popover: #FDFBF7;
   --popover-foreground: #382F2D;
-  
-  --primary: #6B4E3D;
-  --primary-foreground: #FBF7EE;
-  --primary-hover: #543D2F;
-  
+
+  --primary: #4F46E5;
+  --primary-foreground: #FFFFFF;
+  --primary-hover: #4338CA;
+  --primary-active: #3730A3;
+  --primary-subtle: #F0ECE1;
+  --primary-subtle-text: #3730A3;
+  --primary-subtle-border: #D8CCE8;
+
   --secondary: #EFE8DC;
   --secondary-foreground: #382F2D;
   --secondary-hover: #E4DAC9;
-  
+
   --muted: #EFE8DC;
   --muted-foreground: #7E726B;
-  
+
   --accent: #EFE8DC;
   --accent-foreground: #382F2D;
-  
+
   --destructive: #A33A3A;
   --destructive-foreground: #FBF7EE;
   --destructive-hover: #8B2E2E;
-  
+
   --border: #DFD5C4;
+  --border-subtle: #ECE4D6;
   --input: #DFD5C4;
-  --ring: #6B4E3D;
-  
+  --input-focus: #4F46E5;
+  --ring: rgba(79, 70, 229, 0.25);
+
   --status-available-bg: #E8F3EB;
   --status-available-text: #2D5A38;
   --status-available-border: #B8DEC0;
-  
-  --status-borrowed-bg: #F8F0DC;
-  --status-borrowed-text: #785A1D;
-  --status-borrowed-border: #E8D4A2;
-  
+  --status-available-dot: #10B981;
+
+  --status-borrowed-bg: #EFF6FF;
+  --status-borrowed-text: #1E40AF;
+  --status-borrowed-border: #BFDBFE;
+  --status-borrowed-dot: #3E49D7;
+
+  --status-waiting-bg: #F8F0DC;
+  --status-waiting-text: #785A1D;
+  --status-waiting-border: #E8D4A2;
+  --status-waiting-dot: #F59E0B;
+
   --status-overdue-bg: #F6E7E7;
   --status-overdue-text: #8A2E2E;
   --status-overdue-border: #E8B6B6;
+  --status-overdue-dot: #EF4444;
+
+  --shadow-sm: 0 1px 2px 0 rgba(56, 47, 45, 0.05);
+  --shadow-card: 0 2px 10px rgba(56, 47, 45, 0.05);
+  --shadow-elevated: 0 10px 25px -5px rgba(56, 47, 45, 0.08);
+  --shadow-modal: 0 20px 25px -5px rgba(56, 47, 45, 0.12);
 }

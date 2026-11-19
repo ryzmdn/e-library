@@ -21,6 +21,7 @@
     </main>
 
     <?php require dirname(__DIR__) . '/components/footer.php'; ?>
+    <?php require dirname(__DIR__) . '/components/quick-search-modal.php'; ?>
 
     <script src="/assets/js/app.js"></script>
     <script src="/assets/js/catalog.js"></script>
