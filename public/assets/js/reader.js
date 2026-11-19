@@ -9,7 +9,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const watermarkLayer = document.getElementById('reader-watermark-overlay');
     const watermarkText = readerContainer.dataset.watermark || 'E-Library System';
     const fullscreenBtn = document.getElementById('btn-fullscreen');
-    const themeButtons = document.querySelectorAll('[data-reader-theme]');
     const progressText = document.getElementById('reader-sync-indicator');
 
     let secondsRead = 0;
@@ -30,13 +29,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if ((e.ctrlKey || e.metaKey) && ['p', 's', 'u'].includes(e.key.toLowerCase())) {
             e.preventDefault();
         }
-    });
-
-    themeButtons.forEach(btn => {
-        btn.addEventListener('click', () => {
-            const theme = btn.dataset.readerTheme;
-            setReaderTheme(theme);
-        });
     });
 
     if (fullscreenBtn) {
@@ -115,23 +107,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         navigator.sendBeacon('/api/reader/progress', new Blob([payload], { type: 'application/json' }));
-    }
-
-    function setReaderTheme(theme) {
-        readerContainer.classList.remove('theme-light', 'theme-dark', 'theme-sepia');
-        if (theme === 'dark') {
-            readerContainer.classList.add('theme-dark');
-            readerContainer.style.backgroundColor = '#121212';
-            readerContainer.style.color = '#e0e0e0';
-        } else if (theme === 'sepia') {
-            readerContainer.classList.add('theme-sepia');
-            readerContainer.style.backgroundColor = '#fbf0d9';
-            readerContainer.style.color = '#382e1e';
-        } else {
-            readerContainer.classList.add('theme-light');
-            readerContainer.style.backgroundColor = '#ffffff';
-            readerContainer.style.color = '#111111';
-        }
     }
 
     function applyWatermark(layer, text) {

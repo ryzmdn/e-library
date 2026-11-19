@@ -1,33 +1,12 @@
 document.addEventListener('DOMContentLoaded', function () {
-  initTheme();
+  localStorage.removeItem('elibrary_theme');
+  document.documentElement.removeAttribute('data-theme');
   initModals();
   initAlerts();
   initShortcuts();
   initQuickSearch();
   initDropdowns();
 });
-
-function initTheme() {
-  var savedTheme = localStorage.getItem('elibrary_theme') || 'light';
-  applyTheme(savedTheme);
-
-  var themeToggles = document.querySelectorAll('[data-theme-switcher]');
-  themeToggles.forEach(function (button) {
-    button.addEventListener('click', function () {
-      var nextTheme = button.getAttribute('data-theme-switcher');
-      applyTheme(nextTheme);
-      localStorage.setItem('elibrary_theme', nextTheme);
-    });
-  });
-}
-
-function applyTheme(theme) {
-  if (theme === 'light') {
-    document.documentElement.removeAttribute('data-theme');
-  } else {
-    document.documentElement.setAttribute('data-theme', theme);
-  }
-}
 
 function initModals() {
   var openTriggers = document.querySelectorAll('[data-modal-open]');

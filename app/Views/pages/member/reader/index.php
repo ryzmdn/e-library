@@ -36,12 +36,6 @@ $streamUrl = "/reader/stream/" . (int)$asset['id'] . "?token=" . urlencode($stre
         </div>
 
         <div style="display:flex; align-items:center; gap:0.75rem;">
-            <div style="display:flex; border:1px solid var(--border); border-radius:var(--radius-md); overflow:hidden;">
-                <button type="button" class="btn btn-ghost btn-sm" data-reader-theme="light" style="padding:0.25rem 0.625rem; font-size:0.75rem;">Terang</button>
-                <button type="button" class="btn btn-ghost btn-sm" data-reader-theme="sepia" style="padding:0.25rem 0.625rem; font-size:0.75rem;">Sepia</button>
-                <button type="button" class="btn btn-ghost btn-sm" data-reader-theme="dark" style="padding:0.25rem 0.625rem; font-size:0.75rem;">Gelap</button>
-            </div>
-
             <button type="button" id="btn-fullscreen" class="btn btn-outline btn-sm">
                 Layar Penuh
             </button>

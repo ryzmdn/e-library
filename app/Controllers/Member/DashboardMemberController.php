@@ -97,14 +97,11 @@ final class DashboardMemberController extends Controller
 
         $fullName = trim((string)$request->input('full_name', ''));
         $phone = trim((string)$request->input('phone_number', ''));
-        $theme = strtoupper(trim((string)$request->input('theme_preference', 'LIGHT')));
 
         $validator = Validator::make([
             'full_name' => $fullName,
-            'theme_preference' => $theme,
         ], [
             'full_name' => 'required|min:3|max:150',
-            'theme_preference' => 'required|in:LIGHT,DARK,SEPIA',
         ]);
 
         if ($validator->fails()) {
@@ -115,7 +112,7 @@ final class DashboardMemberController extends Controller
         $this->userModel->updateProfile($userId, [
             'full_name' => $fullName,
             'phone_number' => $phone !== '' ? $phone : null,
-            'theme_preference' => $theme,
+            'theme_preference' => 'LIGHT',
         ]);
 
         $currentPassword = (string)$request->input('current_password', '');

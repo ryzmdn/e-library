@@ -2,7 +2,6 @@
 declare(strict_types=1);
 
 $member = $member ?? [];
-$themePref = strtoupper((string)($member['theme_preference'] ?? 'LIGHT'));
 ?>
 <section style="margin-bottom:2rem;">
     <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem; padding-bottom:1.5rem; border-bottom:1px solid var(--border);">
@@ -53,16 +52,6 @@ $themePref = strtoupper((string)($member['theme_preference'] ?? 'LIGHT'));
             <div class="form-group">
                 <label class="form-label" for="phone_number">Nomor Telepon / WhatsApp</label>
                 <input type="tel" id="phone_number" name="phone_number" class="form-input" value="<?= htmlspecialchars((string)($member['phone_number'] ?? ''), ENT_QUOTES, 'UTF-8') ?>" placeholder="08xxxxxxxxxx">
-            </div>
-
-            <div class="form-group">
-                <label class="form-label" for="theme_preference">Tema Tampilan Antarmuka</label>
-                <select id="theme_preference" name="theme_preference" class="form-input">
-                    <option value="LIGHT" <?= $themePref === 'LIGHT' ? 'selected' : '' ?>>Mode Terang (Light Mode)</option>
-                    <option value="DARK" <?= $themePref === 'DARK' ? 'selected' : '' ?>>Mode Gelap (Dark Mode)</option>
-                    <option value="SEPIA" <?= $themePref === 'SEPIA' ? 'selected' : '' ?>>Mode Sepia (Eye Comfort)</option>
-                </select>
-                <span style="font-size:0.75rem; color:var(--muted-foreground); margin-top:0.25rem;">Preferensi ini akan otomatis diselaraskan setiap kali Anda masuk ke sistem.</span>
             </div>
         </div>
         <div class="card-footer" style="display:flex; justify-content:flex-end;">
