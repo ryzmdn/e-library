@@ -6,6 +6,7 @@ namespace App\Controllers\Public;
 use App\Core\Controller;
 use App\Core\Request;
 use App\Core\Response;
+use App\Core\Session;
 use App\Models\BibliographicItemModel;
 use Throwable;
 
@@ -13,56 +14,116 @@ final class HomeController extends Controller
 {
     public function index(Request $request): Response
     {
-        $books = [];
-        $totalTitles = 0;
-        $totalCopies = 0;
+        $user = Session::getUser();
+        $greetingName = 'Sarah';
+        if (!empty($user['full_name'])) {
+            $nameParts = explode(' ', trim((string)$user['full_name']));
+            $greetingName = $nameParts[0] !== '' ? $nameParts[0] : 'Sarah';
+        }
+
+        $totalTitles = 1200;
+        $totalCopies = 4820;
 
         try {
             $biblioModel = new BibliographicItemModel();
-            $books = $biblioModel->getLatestItems(6);
-            $totalTitles = $biblioModel->countTotal();
-            $totalCopies = $biblioModel->countAvailableCopies();
+            $dbTitles = $biblioModel->countTotal();
+            if ($dbTitles > 0) {
+                $totalTitles = $dbTitles;
+            }
+            $dbCopies = $biblioModel->countAvailableCopies();
+            if ($dbCopies > 0) {
+                $totalCopies = $dbCopies;
+            }
         } catch (Throwable $e) {
-            $books = [];
+            $totalTitles = 1200;
+            $totalCopies = 4820;
         }
 
-        if (empty($books)) {
-            $books = [
-                [
-                    'slug' => 'pengantar-rekayasa-perangkat-lunak',
-                    'title' => 'Pengantar Rekayasa Perangkat Lunak',
-                    'authors_text' => 'Roger S. Pressman, Bruce R. Maxim',
-                    'call_number_base' => '005.1 PRE p',
-                    'publication_year' => 2024,
-                    'available_physical_copies' => 4,
-                    'media_type' => 'HYBRID',
-                ],
-                [
-                    'slug' => 'arsitektur-komputer-modern',
-                    'title' => 'Arsitektur Komputer Modern & Desain Sistem',
-                    'authors_text' => 'David A. Patterson, John L. Hennessy',
-                    'call_number_base' => '004.22 PAT a',
-                    'publication_year' => 2023,
-                    'available_physical_copies' => 0,
-                    'media_type' => 'PHYSICAL_ONLY',
-                ],
-                [
-                    'slug' => 'dasar-dasar-sains-data-terapan',
-                    'title' => 'Dasar-Dasar Sains Data Terapan',
-                    'authors_text' => 'Hadley Wickham, Garrett Grolemund',
-                    'call_number_base' => '005.7 WIC d',
-                    'publication_year' => 2024,
-                    'available_physical_copies' => 2,
-                    'media_type' => 'HYBRID',
-                ],
-            ];
-            $totalTitles = 3;
-            $totalCopies = 6;
-        }
+        $currentlyReading = [
+            'title' => 'Filosofi Teras',
+            'author' => 'Henry Manampiring',
+            'slug' => 'filosofi-teras',
+            'status_label' => 'Sedang Dibaca',
+            'last_read' => 'Dibaca 2 jam yang lalu',
+            'progress_percent' => 64,
+            'progress_text' => '64% (Hal 178 dari 278)',
+            'reader_url' => '/reader/filosofi-teras',
+            'catalog_url' => '/catalog/filosofi-teras',
+        ];
+
+        $curatedWeeklyBooks = [
+            [
+                'title' => 'Atomic Habits',
+                'author' => 'James Clear',
+                'slug' => 'atomic-habits',
+                'category' => 'Pengembangan Diri',
+                'device_type' => 'tablet',
+                'status' => 'Tersedia Digital',
+            ],
+            [
+                'title' => 'Bumi Manusia',
+                'author' => 'Pramoedya Ananta Toer',
+                'slug' => 'bumi-manusia',
+                'category' => 'Sastra Klasik',
+                'device_type' => 'book',
+                'status' => 'Tersedia Digital',
+            ],
+            [
+                'title' => 'Laut Bercerita',
+                'author' => 'Leila S. Chudori',
+                'slug' => 'laut-bercerita',
+                'category' => 'Fiksi Indonesia',
+                'device_type' => 'laptop',
+                'status' => 'Tersedia Digital',
+            ],
+            [
+                'title' => 'Kecerdasan Emosional',
+                'author' => 'Daniel Goleman',
+                'slug' => 'kecerdasan-emosional',
+                'category' => 'Psikologi',
+                'device_type' => 'phone',
+                'status' => 'Tersedia Digital',
+            ],
+        ];
+
+        $popularBooks = [
+            [
+                'title' => 'Sapiens: Riwayat Singkat Umat Manusia',
+                'author' => 'Yuval Noah Harari',
+                'slug' => 'sapiens',
+                'rating' => '4.9',
+                'readers_count' => '1.4k pembaca',
+            ],
+            [
+                'title' => 'Gadis Kretek',
+                'author' => 'Ratih Kumala',
+                'slug' => 'gadis-kretek',
+                'rating' => '4.8',
+                'readers_count' => '980 pembaca',
+            ],
+            [
+                'title' => 'The Psychology of Money',
+                'author' => 'Morgan Housel',
+                'slug' => 'the-psychology-of-money',
+                'rating' => '4.9',
+                'readers_count' => '2.1k pembaca',
+            ],
+            [
+                'title' => 'Cantik Itu Luka',
+                'author' => 'Eka Kurniawan',
+                'slug' => 'cantik-itu-luka',
+                'rating' => '4.7',
+                'readers_count' => '1.1k pembaca',
+            ],
+        ];
 
         return $this->render('pages/public/home', [
-            'pageTitle' => 'Beranda Utama',
-            'sampleBooks' => $books,
+            'pageTitle' => 'RuangBaca - Perpustakaan Digital yang Ramah & Tenang',
+            'user' => $user,
+            'greetingName' => $greetingName,
+            'currentlyReading' => $currentlyReading,
+            'curatedWeeklyBooks' => $curatedWeeklyBooks,
+            'popularBooks' => $popularBooks,
             'totalTitles' => $totalTitles,
             'totalCopies' => $totalCopies,
         ]);
