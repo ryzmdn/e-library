@@ -9,14 +9,19 @@ use App\Core\Response;
 use App\Core\Session;
 use App\Core\Validator;
 use App\Models\UserModel;
+use Throwable;
 
 final class AuthController extends Controller
 {
-    private UserModel $userModel;
+    private ?UserModel $userModel;
 
     public function __construct()
     {
-        $this->userModel = new UserModel();
+        try {
+            $this->userModel = new UserModel();
+        } catch (Throwable $e) {
+            $this->userModel = null;
+        }
     }
 
     public function showLoginForm(Request $request): Response
@@ -42,6 +47,12 @@ final class AuthController extends Controller
 
         if ($validator->fails()) {
             Session::setFlash('error', $validator->getFirstError());
+            Session::setFlash('old_identity', $identity);
+            return $this->redirect('/login');
+        }
+
+        if ($this->userModel === null) {
+            Session::setFlash('error', 'Layanan autentikasi basis data sedang tidak dapat dihubungi.');
             Session::setFlash('old_identity', $identity);
             return $this->redirect('/login');
         }
@@ -120,6 +131,14 @@ final class AuthController extends Controller
 
         if ($validator->fails()) {
             Session::setFlash('error', $validator->getFirstError());
+            Session::setFlash('old_name', $fullName);
+            Session::setFlash('old_email', $email);
+            Session::setFlash('old_phone', $phone);
+            return $this->redirect('/register');
+        }
+
+        if ($this->userModel === null) {
+            Session::setFlash('error', 'Layanan pendaftaran basis data sedang tidak dapat dihubungi.');
             Session::setFlash('old_name', $fullName);
             Session::setFlash('old_email', $email);
             Session::setFlash('old_phone', $phone);

@@ -11,7 +11,7 @@ VALUES
 (1, 'ADM-001', 'admin@elibrary.local', '$2y$12$5kJv65K1aUaOj8vuUH4voObf5nIv38H3rhGBeBVCfldVqpdsONx3K', 'Administrator Utama', '081234567890', 'SUPER_ADMIN', 2, 'ACTIVE', 'LIGHT', '2030-12-31'),
 (2, 'LIB-001', 'pustakawan@elibrary.local', '$2y$12$5kJv65K1aUaOj8vuUH4voObf5nIv38H3rhGBeBVCfldVqpdsONx3K', 'Siti Rahmawati, S.IIP.', '081234567891', 'LIBRARIAN', 2, 'ACTIVE', 'LIGHT', '2030-12-31'),
 (3, 'CAT-001', 'kataloger@elibrary.local', '$2y$12$5kJv65K1aUaOj8vuUH4voObf5nIv38H3rhGBeBVCfldVqpdsONx3K', 'Budi Santoso, A.Md.', '081234567892', 'CATALOGER', 2, 'ACTIVE', 'LIGHT', '2030-12-31'),
-(4, 'M-2024-0001', 'anggota@elibrary.local', '$2y$12$5kJv65K1aUaOj8vuUH4voObf5nIv38H3rhGBeBVCfldVqpdsONx3K', 'Ahmad Fauzi', '081234567893', 'MEMBER', 1, 'ACTIVE', 'LIGHT', '2027-12-31')
+(4, 'M-2024-0001', 'anggota@elibrary.local', '$2y$12$5kJv65K1aUaOj8vuUH4voObf5nIv38H3rhGBeBVCfldVqpdsONx3K', 'Sarah Anggita', '081234567893', 'MEMBER', 1, 'ACTIVE', 'LIGHT', '2027-12-31')
 ON DUPLICATE KEY UPDATE full_name = VALUES(full_name);
 
 INSERT INTO bibliographic_items (id, slug, isbn_13, issn, ddc_code, call_number_base, title, subtitle, authors_text, publisher_name, publication_year, edition_statement, language_code, physical_pages, synopsis, subject_tags, media_type, total_physical_copies, available_physical_copies, rating_avg, rating_count)
@@ -50,7 +50,17 @@ VALUES
 (13, 5, 'BC-2023-00501', 'E28011606000020475304F01', 'Gedung Utama', 3, 'Rak 3B-05', 'EXCELLENT', 'AVAILABLE', '2023-08-14', 450000.00),
 (14, 5, 'BC-2023-00502', 'E28011606000020475304F02', 'Gedung Utama', 3, 'Rak 3B-05', 'EXCELLENT', 'AVAILABLE', '2023-08-14', 450000.00),
 (15, 5, 'BC-2023-00503', 'E28011606000020475304F03', 'Gedung Utama', 3, 'Rak 3B-05', 'GOOD', 'AVAILABLE', '2023-08-14', 450000.00),
-(16, 5, 'BC-2023-00504', 'E28011606000020475304F04', 'Gedung Utama', 3, 'Rak 3B-05', 'GOOD', 'BORROWED', '2023-08-14', 450000.00)
+(16, 5, 'BC-2023-00504', 'E28011606000020475304F04', 'Gedung Utama', 3, 'Rak 3B-05', 'GOOD', 'BORROWED', '2023-08-14', 450000.00),
+(17, 6, 'BC-2024-00601', 'E28011606000020475304A01', 'Gedung Utama', 1, 'Rak 1A-01', 'EXCELLENT', 'AVAILABLE', '2024-01-10', 125000.00),
+(18, 6, 'BC-2024-00602', 'E28011606000020475304A02', 'Gedung Utama', 1, 'Rak 1A-01', 'GOOD', 'AVAILABLE', '2024-01-10', 125000.00),
+(19, 7, 'BC-2024-00701', 'E28011606000020475304A03', 'Gedung Utama', 1, 'Rak 1B-02', 'EXCELLENT', 'AVAILABLE', '2024-01-12', 145000.00),
+(20, 8, 'BC-2024-00801', 'E28011606000020475304A04', 'Gedung Utama', 1, 'Rak 1C-03', 'EXCELLENT', 'AVAILABLE', '2024-02-01', 175000.00),
+(21, 9, 'BC-2024-00901', 'E28011606000020475304A05', 'Gedung Utama', 1, 'Rak 1D-01', 'EXCELLENT', 'AVAILABLE', '2024-02-15', 135000.00),
+(22, 10, 'BC-2024-01001', 'E28011606000020475304A06', 'Gedung Utama', 1, 'Rak 1E-02', 'GOOD', 'AVAILABLE', '2024-02-20', 160000.00),
+(23, 11, 'BC-2024-01101', 'E28011606000020475304A07', 'Gedung Utama', 1, 'Rak 1F-01', 'EXCELLENT', 'AVAILABLE', '2024-03-01', 185000.00),
+(24, 12, 'BC-2024-01201', 'E28011606000020475304A08', 'Gedung Utama', 1, 'Rak 1G-02', 'EXCELLENT', 'AVAILABLE', '2024-03-05', 95000.00),
+(25, 13, 'BC-2024-01301', 'E28011606000020475304A09', 'Gedung Utama', 1, 'Rak 1H-01', 'EXCELLENT', 'AVAILABLE', '2024-03-10', 115000.00),
+(26, 14, 'BC-2024-01401', 'E28011606000020475304A10', 'Gedung Utama', 1, 'Rak 1I-03', 'EXCELLENT', 'AVAILABLE', '2024-03-12', 150000.00)
 ON DUPLICATE KEY UPDATE availability_status = VALUES(availability_status);
 
 INSERT INTO digital_assets (id, biblio_id, storage_filename_hash, file_format, file_size_bytes, sha256_checksum, access_level, max_concurrent_readers, uploaded_by)
@@ -61,8 +71,38 @@ VALUES
 (4, 6, '6a884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d9', 'PDF', 12400000, '6a884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d9', 'MEMBER_STREAM_ONLY', 0, 1),
 (5, 7, '7b227777d4dd1fc61c6f884f48641d02b4d121d3fd328cb08b5531fcacdabf8b', 'PDF', 16500000, '7b227777d4dd1fc61c6f884f48641d02b4d121d3fd328cb08b5531fcacdabf8b', 'MEMBER_STREAM_ONLY', 0, 1),
 (6, 8, '8c2d127de37b942baad06145e54b0c619a1f22327b2ebbcfbec78f5564afe39e', 'PDF', 18200000, '8c2d127de37b942baad06145e54b0c619a1f22327b2ebbcfbec78f5564afe39e', 'MEMBER_STREAM_ONLY', 0, 1),
-(7, 9, '9d2d127de37b942baad06145e54b0c619a1f22327b2ebbcfbec78f5564afe39f', 'PDF', 14100000, '9d2d127de37b942baad06145e54b0c619a1f22327b2ebbcfbec78f5564afe39f', 'MEMBER_STREAM_ONLY', 0, 1)
+(7, 9, '9d2d127de37b942baad06145e54b0c619a1f22327b2ebbcfbec78f5564afe39f', 'PDF', 14100000, '9d2d127de37b942baad06145e54b0c619a1f22327b2ebbcfbec78f5564afe39f', 'MEMBER_STREAM_ONLY', 0, 1),
+(8, 10, 'ae2d127de37b942baad06145e54b0c619a1f22327b2ebbcfbec78f5564afe390', 'PDF', 13200000, 'ae2d127de37b942baad06145e54b0c619a1f22327b2ebbcfbec78f5564afe390', 'MEMBER_STREAM_ONLY', 0, 1),
+(9, 11, 'be2d127de37b942baad06145e54b0c619a1f22327b2ebbcfbec78f5564afe391', 'PDF', 19400000, 'be2d127de37b942baad06145e54b0c619a1f22327b2ebbcfbec78f5564afe391', 'MEMBER_STREAM_ONLY', 0, 1),
+(10, 12, 'ce2d127de37b942baad06145e54b0c619a1f22327b2ebbcfbec78f5564afe392', 'PDF', 9800000, 'ce2d127de37b942baad06145e54b0c619a1f22327b2ebbcfbec78f5564afe392', 'MEMBER_STREAM_ONLY', 0, 1),
+(11, 13, 'de2d127de37b942baad06145e54b0c619a1f22327b2ebbcfbec78f5564afe393', 'PDF', 11200000, 'de2d127de37b942baad06145e54b0c619a1f22327b2ebbcfbec78f5564afe393', 'MEMBER_STREAM_ONLY', 0, 1),
+(12, 14, 'ee2d127de37b942baad06145e54b0c619a1f22327b2ebbcfbec78f5564afe394', 'PDF', 17800000, 'ee2d127de37b942baad06145e54b0c619a1f22327b2ebbcfbec78f5564afe394', 'MEMBER_STREAM_ONLY', 0, 1),
+(13, 15, 'fe2d127de37b942baad06145e54b0c619a1f22327b2ebbcfbec78f5564afe395', 'PDF', 10500000, 'fe2d127de37b942baad06145e54b0c619a1f22327b2ebbcfbec78f5564afe395', 'MEMBER_STREAM_ONLY', 0, 1)
 ON DUPLICATE KEY UPDATE file_size_bytes = VALUES(file_size_bytes);
+
+INSERT INTO reading_progress (id, user_id, digital_asset_id, last_page_or_cfi, completion_percent, total_reading_seconds, bookmarks_json)
+VALUES
+(1, 4, 4, '178', 64.00, 5400, '["bab-3", "dikotomi-kendali"]'),
+(2, 4, 7, '122', 32.00, 3600, '["bab-2", "bagian-biru"]')
+ON DUPLICATE KEY UPDATE completion_percent = VALUES(completion_percent);
+
+INSERT INTO user_favorite_books (id, user_id, biblio_id, reading_status, personal_note)
+VALUES
+(1, 4, 9, 'READING', 'Rekomendasi dari teman klub buku'),
+(2, 4, 7, 'UNREAD', 'Perlu re-read bab habit stacking'),
+(3, 4, 6, 'READING', 'Buku pegangan ketenangan hidup'),
+(4, 4, 11, 'UNREAD', 'Target baca bulan depan'),
+(5, 4, 12, 'COMPLETED', 'Fiksi sejarah aroma cengkeh'),
+(6, 4, 13, 'COMPLETED', 'Bagus untuk belajar mindset finansial')
+ON DUPLICATE KEY UPDATE reading_status = VALUES(reading_status);
+
+INSERT INTO loan_transactions (id, transaction_code, idempotency_key, user_id, book_copy_id, issued_by_staff_id, returned_to_staff_id, borrowed_at, due_date, returned_at, loan_status, remarks)
+VALUES
+(1, 'TRX-2024-001', 'IDEMP-TRX-2024-001', 4, 19, 2, 2, '2024-10-03 09:00:00', '2024-10-12', '2024-10-12 14:00:00', 'RETURNED', 'Pengembalian tepat waktu kondisi prima'),
+(2, 'TRX-2024-002', 'IDEMP-TRX-2024-002', 4, 25, 2, 2, '2024-09-22 10:30:00', '2024-09-28', '2024-09-28 11:15:00', 'RETURNED', 'Pengembalian tepat waktu kondisi prima'),
+(3, 'TRX-2024-003', 'IDEMP-TRX-2024-003', 4, 20, 2, 2, '2024-08-31 14:00:00', '2024-09-14', '2024-09-14 16:20:00', 'RETURNED', 'Pengembalian tepat waktu kondisi prima'),
+(4, 'TRX-2024-004', 'IDEMP-TRX-2024-004', 4, 26, 2, 2, '2024-08-11 11:00:00', '2024-08-22', '2024-08-22 15:10:00', 'RETURNED', 'Pengembalian tepat waktu kondisi prima')
+ON DUPLICATE KEY UPDATE loan_status = VALUES(loan_status);
 
 INSERT INTO library_holidays (holiday_date, description)
 VALUES
