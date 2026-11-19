@@ -7,7 +7,7 @@ $uriPath = parse_url($currentUri, PHP_URL_PATH) ?? '/';
 $isHomeActive = ($uriPath === '/');
 $isCatalogActive = str_starts_with($uriPath, '/catalog') || str_starts_with($uriPath, '/book/');
 $isFavoritesActive = str_starts_with($uriPath, '/member/favorites') || str_starts_with($uriPath, '/favorites');
-$isHistoryActive = str_starts_with($uriPath, '/member/history') || str_starts_with($uriPath, '/member/loans');
+$isHistoryActive = str_starts_with($uriPath, '/member/history') || str_starts_with($uriPath, '/history') || str_starts_with($uriPath, '/member/loans');
 
 $displayName = $currentUserName ?? 'Pengguna';
 $initials = 'U';

@@ -29,6 +29,7 @@ use App\Controllers\Member\DashboardMemberController;
 use App\Controllers\Member\DigitalReaderController;
 use App\Controllers\Member\FavoriteMemberController;
 use App\Controllers\Member\LoanMemberController;
+use App\Controllers\Member\ReadingHistoryMemberController;
 use App\Controllers\Member\ReservationMemberController;
 use App\Controllers\Public\AuthController;
 use App\Controllers\Public\CatalogPublicController;
@@ -49,6 +50,7 @@ $router->get('/catalog/{slug}', [CatalogPublicController::class, 'show']);
 $router->get('/book/{slug}', [CatalogPublicController::class, 'show']);
 $router->get('/api/catalog/suggest', [CatalogPublicController::class, 'searchSuggest']);
 $router->get('/favorites', [FavoriteMemberController::class, 'index']);
+$router->get('/history', [ReadingHistoryMemberController::class, 'index']);
 $router->post('/api/favorites/toggle', [FavoriteMemberController::class, 'toggle']);
 
 $router->get('/reader/{slug}', [DigitalReaderController::class, 'open'], [AuthenticatedMiddleware::class]);
@@ -78,6 +80,8 @@ $router->group('/member', function ($r): void {
     $r->get('/favorites', [FavoriteMemberController::class, 'index']);
     $r->post('/favorites/note', [FavoriteMemberController::class, 'updateNote'], [CsrfVerifyMiddleware::class]);
     $r->post('/favorites/{id}/remove', [FavoriteMemberController::class, 'remove'], [CsrfVerifyMiddleware::class]);
+
+    $r->get('/history', [ReadingHistoryMemberController::class, 'index']);
 }, [AuthenticatedMiddleware::class]);
 
 $staffAuth = new RoleAuthorizeMiddleware('SUPER_ADMIN', 'LIBRARIAN', 'CATALOGER');
