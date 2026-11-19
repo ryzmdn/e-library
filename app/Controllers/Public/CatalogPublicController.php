@@ -34,12 +34,17 @@ final class CatalogPublicController extends Controller
     public function index(Request $request): Response
     {
         $q = trim((string)$request->input('q', ''));
+        $category = trim((string)$request->input('category', 'all'));
         $type = trim((string)$request->input('type', ''));
         $ddc = trim((string)$request->input('ddc', ''));
         $avail = (int)$request->input('avail', 0);
-        $sort = trim((string)$request->input('sort', 'latest'));
+        $format = trim((string)$request->input('format', ''));
+        $lang = trim((string)$request->input('lang', ''));
+        $recommended = (int)$request->input('recommended', 0);
+        $sort = trim((string)$request->input('sort', 'popular'));
+        $view = trim((string)$request->input('view', 'grid'));
         $page = max(1, (int)$request->input('page', 1));
-        $limit = 12;
+        $limit = 8;
 
         $filters = [];
         if ($type !== '') {
@@ -75,9 +80,181 @@ final class CatalogPublicController extends Controller
             $ddcCategories = [];
         }
 
+        if (empty($items)) {
+            $mockCatalog = [
+                [
+                    'id' => 6,
+                    'slug' => 'filosofi-teras',
+                    'title' => 'Filosofi Teras',
+                    'authors_text' => 'Henry Manampiring',
+                    'category' => 'Filsafat & Self-Help',
+                    'category_slug' => 'pengembangan-diri',
+                    'rating_avg' => 4.9,
+                    'rating_count_text' => '2.1k ulasan',
+                    'media_format' => 'E-Book',
+                    'is_available' => true,
+                    'is_audio' => false,
+                    'is_indonesia' => true,
+                    'is_recommended' => true,
+                ],
+                [
+                    'id' => 7,
+                    'slug' => 'atomic-habits',
+                    'title' => 'Atomic Habits',
+                    'authors_text' => 'James Clear',
+                    'category' => 'Produktivitas',
+                    'category_slug' => 'pengembangan-diri',
+                    'rating_avg' => 4.8,
+                    'rating_count_text' => '3.8k ulasan',
+                    'media_format' => 'E-Book + Audio',
+                    'is_available' => true,
+                    'is_audio' => true,
+                    'is_indonesia' => true,
+                    'is_recommended' => true,
+                ],
+                [
+                    'id' => 9,
+                    'slug' => 'laut-bercerita',
+                    'title' => 'Laut Bercerita',
+                    'authors_text' => 'Leila S. Chudori',
+                    'category' => 'Fiksi Sastra',
+                    'category_slug' => 'sastra-fiksi',
+                    'rating_avg' => 4.9,
+                    'rating_count_text' => '1.9k ulasan',
+                    'media_format' => 'E-Book',
+                    'is_available' => true,
+                    'is_audio' => false,
+                    'is_indonesia' => true,
+                    'is_recommended' => true,
+                ],
+                [
+                    'id' => 11,
+                    'slug' => 'sapiens',
+                    'title' => 'Sapiens',
+                    'authors_text' => 'Yuval Noah Harari',
+                    'category' => 'Sejarah & Peradaban',
+                    'category_slug' => 'sejarah-budaya',
+                    'rating_avg' => 4.7,
+                    'rating_count_text' => '4.2k ulasan',
+                    'media_format' => 'E-Book',
+                    'is_available' => true,
+                    'is_audio' => false,
+                    'is_indonesia' => true,
+                    'is_recommended' => true,
+                ],
+                [
+                    'id' => 13,
+                    'slug' => 'the-psychology-of-money',
+                    'title' => 'The Psychology of Money',
+                    'authors_text' => 'Morgan Housel',
+                    'category' => 'Keuangan & Bisnis',
+                    'category_slug' => 'bisnis-keuangan',
+                    'rating_avg' => 4.8,
+                    'rating_count_text' => '2.7k ulasan',
+                    'media_format' => 'E-Book',
+                    'is_available' => true,
+                    'is_audio' => false,
+                    'is_indonesia' => true,
+                    'is_recommended' => true,
+                ],
+                [
+                    'id' => 8,
+                    'slug' => 'bumi-manusia',
+                    'title' => 'Bumi Manusia',
+                    'authors_text' => 'Pramoedya Ananta Toer',
+                    'category' => 'Sastra Klasik',
+                    'category_slug' => 'sastra-fiksi',
+                    'rating_avg' => 5.0,
+                    'rating_count_text' => '5.4k ulasan',
+                    'media_format' => 'E-Book',
+                    'is_available' => true,
+                    'is_audio' => false,
+                    'is_indonesia' => true,
+                    'is_recommended' => true,
+                ],
+                [
+                    'id' => 15,
+                    'slug' => 'sebuah-seni-untuk-bersikap-bodo-amat',
+                    'title' => 'Sebuah Seni untuk Bersikap Bodo Amat',
+                    'authors_text' => 'Mark Manson',
+                    'category' => 'Self-Improvement',
+                    'category_slug' => 'pengembangan-diri',
+                    'rating_avg' => 4.6,
+                    'rating_count_text' => '3.1k ulasan',
+                    'media_format' => 'E-Book',
+                    'is_available' => true,
+                    'is_audio' => false,
+                    'is_indonesia' => true,
+                    'is_recommended' => false,
+                ],
+                [
+                    'id' => 14,
+                    'slug' => 'cantik-itu-luka',
+                    'title' => 'Cantik Itu Luka',
+                    'authors_text' => 'Eka Kurniawan',
+                    'category' => 'Realisme Magis',
+                    'category_slug' => 'sastra-fiksi',
+                    'rating_avg' => 4.8,
+                    'rating_count_text' => '1.6k ulasan',
+                    'media_format' => 'E-Book',
+                    'is_available' => true,
+                    'is_audio' => false,
+                    'is_indonesia' => true,
+                    'is_recommended' => false,
+                ],
+            ];
+
+            $filteredMock = [];
+            foreach ($mockCatalog as $book) {
+                if ($q !== '') {
+                    $matchTitle = stripos($book['title'], $q) !== false;
+                    $matchAuthor = stripos($book['authors_text'], $q) !== false;
+                    $matchCategory = stripos($book['category'], $q) !== false;
+                    if (!$matchTitle && !$matchAuthor && !$matchCategory) {
+                        continue;
+                    }
+                }
+                if ($category !== 'all' && $category !== '') {
+                    if ($book['category_slug'] !== $category) {
+                        continue;
+                    }
+                }
+                if ($avail === 1 && !$book['is_available']) {
+                    continue;
+                }
+                if ($format === 'audio' && !$book['is_audio']) {
+                    continue;
+                }
+                if ($lang === 'id' && !$book['is_indonesia']) {
+                    continue;
+                }
+                if ($recommended === 1 && !$book['is_recommended']) {
+                    continue;
+                }
+                $filteredMock[] = $book;
+            }
+
+            $items = $filteredMock;
+            $totalItems = count($filteredMock) === count($mockCatalog) ? 4820 : count($filteredMock);
+            $totalPages = max(1, (int)ceil($totalItems / $limit));
+        }
+
+        $categoriesList = [
+            ['id' => 'all', 'label' => 'Semua Buku', 'count' => 4820],
+            ['id' => 'pengembangan-diri', 'label' => 'Pengembangan Diri', 'count' => 820],
+            ['id' => 'sastra-fiksi', 'label' => 'Sastra & Fiksi', 'count' => 1150],
+            ['id' => 'sains-teknologi', 'label' => 'Sains & Teknologi', 'count' => 640],
+            ['id' => 'bisnis-keuangan', 'label' => 'Bisnis & Keuangan', 'count' => 510],
+            ['id' => 'sejarah-budaya', 'label' => 'Sejarah & Budaya', 'count' => 430],
+            ['id' => 'psikologi', 'label' => 'Psikologi', 'count' => 380],
+        ];
+
         $queryParams = [];
         if ($q !== '') {
             $queryParams['q'] = $q;
+        }
+        if ($category !== 'all' && $category !== '') {
+            $queryParams['category'] = $category;
         }
         if ($type !== '') {
             $queryParams['type'] = $type;
@@ -88,8 +265,20 @@ final class CatalogPublicController extends Controller
         if ($avail === 1) {
             $queryParams['avail'] = 1;
         }
-        if ($sort !== '' && $sort !== 'latest') {
+        if ($format !== '') {
+            $queryParams['format'] = $format;
+        }
+        if ($lang !== '') {
+            $queryParams['lang'] = $lang;
+        }
+        if ($recommended === 1) {
+            $queryParams['recommended'] = 1;
+        }
+        if ($sort !== '' && $sort !== 'popular') {
             $queryParams['sort'] = $sort;
+        }
+        if ($view !== 'grid') {
+            $queryParams['view'] = $view;
         }
 
         if ($request->isJson()) {
@@ -107,18 +296,23 @@ final class CatalogPublicController extends Controller
         }
 
         return $this->render('pages/public/catalog/index', [
-            'pageTitle' => 'Katalog OPAC & Penelusuran Pustaka',
+            'pageTitle' => 'Katalog Koleksi Digital - RuangBaca',
             'items' => $items,
             'totalItems' => $totalItems,
             'currentPage' => $page,
             'totalPages' => $totalPages,
             'keyword' => $q,
-            'mediaType' => $type,
-            'ddcCode' => $ddc,
+            'activeCategory' => $category,
+            'categoriesList' => $categoriesList,
             'onlyAvailable' => $avail === 1,
+            'formatAudio' => $format === 'audio',
+            'langId' => $lang === 'id',
+            'recommendedOnly' => $recommended === 1,
             'sort' => $sort,
-            'ddcCategories' => $ddcCategories,
+            'viewMode' => $view,
             'queryParams' => $queryParams,
+            'totalEbooks' => 4820,
+            'totalAudios' => 950,
         ]);
     }
 
